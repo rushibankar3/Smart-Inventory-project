@@ -7,7 +7,7 @@ st.set_page_config(page_title="Smart Inventory AI", layout="centered")
 
 st.title("🧠 Smart Inventory AI System")
 
-sku_id = st.text_input("Enter SKU ID (e.g. SKU_001)")
+sku_id = st.text_input("Enter Category name (eg. Grocery)")
 
 if st.button("Check Inventory Status"):
     response = requests.get(f"{API_URL}/predict/{sku_id}")

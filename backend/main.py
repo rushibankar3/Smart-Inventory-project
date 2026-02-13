@@ -22,7 +22,8 @@ def root():
 
 @app.get("/predict/{sku_id}")
 def predict_sku(sku_id: str):
-    sku_df = df[df['SKU_ID'] == sku_id].copy()
+
+    sku_df = df[df['Category'] == sku_id].copy()
 
     if sku_df.empty:
         return {"error": "SKU not found"}
@@ -41,7 +42,7 @@ def predict_sku(sku_id: str):
     sku_df['lag_14'] = sku_df['Units Sold'].shift(14)
     sku_df['lag_30'] = sku_df['Units Sold'].shift(30)
 
-    sku_df['rolling_7'] = sku_df['Units Sold'].shift(1).rolling(7).mean()
+    sku_df['rolling_7']  = sku_df['Units Sold'].shift(1).rolling(7).mean()
     sku_df['rolling_14'] = sku_df['Units Sold'].shift(1).rolling(14).mean()
 
     sku_df['price_diff_comp'] = sku_df['Price'] - sku_df['Competitor Pricing']
@@ -49,7 +50,6 @@ def predict_sku(sku_id: str):
 
     sku_df = sku_df.dropna()
 
-    # ---------- PREDICTION ----------
     sku_df = predict_demand(sku_df)
     latest = sku_df.iloc[-1]
 
@@ -60,6 +60,7 @@ def predict_sku(sku_id: str):
 
     status, action = inventory_decision(combined)
 
+
     return {
         "SKU_ID": sku_id,
         "Predicted_Demand": round(latest['predicted_demand'], 2),
@@ -67,5 +68,3 @@ def predict_sku(sku_id: str):
         "Status": status,
         "Action": action
     }
-
-
