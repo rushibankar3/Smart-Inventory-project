@@ -142,6 +142,12 @@ Jupyter notebook containing the complete data science workflow:
 - Safety stock calculations
 - Inventory status classification
 
+## Prerequisites
+
+- Python 3.8 or higher
+- Git (for cloning the repository)
+- A web browser for accessing the Streamlit interface
+
 ## Installation
 
 1. **Clone the repository** (if applicable) or navigate to the project directory
@@ -195,10 +201,37 @@ Example API response:
 
 ### Using the Web Interface
 
-1. Open the Streamlit app in your browser
-2. Enter a product category (e.g., "Groceries")
+1. Open the Streamlit app in your browser at `http://localhost:8501`
+2. Enter a product category (e.g., "Groceries", "Toys", "Dairy", "Personal Care")
 3. Click "Check Inventory Status"
-4. View the predicted demand, current inventory, and recommended actions
+4. View the predicted demand, current inventory level, status (UNDERSTOCK/OVERSTOCK/OK), and recommended actions
+
+### API Usage
+
+You can also interact with the backend API directly:
+
+- Health check: `GET http://localhost:8000/`
+- Get prediction: `GET http://localhost:8000/predict/{category}`
+
+Replace `{category}` with the product category name.
+
+## Screenshots
+
+### Web Interface
+![Smart Inventory Web Interface](screenshot.png)
+
+*The Streamlit web interface showing inventory status for the Groceries category with demand prediction and reorder recommendations.*
+
+### API Response Example
+```json
+{
+  "SKU_ID": "Groceries",
+  "Predicted_Demand": 47.91,
+  "Inventory_Level": 117,
+  "Status": "UNDERSTOCK",
+  "Action": "Reorder 1271 units"
+}
+```
 
 ## Model Details
 
