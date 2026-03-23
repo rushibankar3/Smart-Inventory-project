@@ -1,4 +1,4 @@
 SKU_ID,Item_Name,Category,Shelf_Life_Days,Supplier_Lead_Time,Min_Order_Qty,Holding_Cost_Per_Unit,Ordering_Cost
-SKU_001,Rice,Grocery,365,7,50,2,200
+SKU_001,Rice,Groceries,365,7,50,2,200
 SKU_002,Milk,Dairy,7,1,20,1,100
 SKU_003,Soap,Personal Care,730,5,30,1.5,150

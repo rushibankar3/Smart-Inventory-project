@@ -1,4 +1,4 @@
-#!/Users/rushibankar/Downloads/Smart-Inventory-Project/venv/bin/python3
+#!/Users/rushibankar/Downloads/Smart-Inventory-Project/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

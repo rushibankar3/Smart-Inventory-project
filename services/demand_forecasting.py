@@ -1,6 +1,7 @@
 import joblib
 import pandas as pd
 import os
+import xgboost as xgb
 
 MODEL_PATH = os.path.join("models", "model.pkl")
 model = joblib.load(MODEL_PATH)
@@ -22,11 +23,16 @@ FEATURES = [
     'lag_30',
     'rolling_7',
     'rolling_14',
-    'price_diff_comp',
-    'discount_flag'
+    'price_diff_competitor',
+    'discount_flag',
+    'Category',
+    'Region',
+    'Weather Condition',
+    'Seasonality'
 ]
 
 def predict_demand(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df['predicted_demand'] = model.predict(df[FEATURES])
+    dmatrix = xgb.DMatrix(df[FEATURES], enable_categorical=True)
+    df['predicted_demand'] = model.get_booster().predict(dmatrix)
     return df

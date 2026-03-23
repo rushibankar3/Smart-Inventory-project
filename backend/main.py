@@ -2,6 +2,7 @@
 from fastapi import FastAPI
 import pandas as pd
 import os
+from sklearn.preprocessing import LabelEncoder
 
 from services.demand_forecasting import predict_demand
 from services.inventory_logic import inventory_decision
@@ -45,25 +46,31 @@ def predict_sku(sku_id: str):
     sku_df['rolling_7']  = sku_df['Units Sold'].shift(1).rolling(7).mean()
     sku_df['rolling_14'] = sku_df['Units Sold'].shift(1).rolling(14).mean()
 
-    sku_df['price_diff_comp'] = sku_df['Price'] - sku_df['Competitor Pricing']
+    sku_df['price_diff_competitor'] = sku_df['Price'] - sku_df['Competitor Pricing']
     sku_df['discount_flag'] = (sku_df['Discount'] > 0).astype(int)
 
     sku_df = sku_df.dropna()
 
+    # Encode categorical features
+    sku_df['Category'] = sku_df['Category'].astype('category')
+    sku_df['Region'] = sku_df['Region'].astype('category')
+    sku_df['Weather Condition'] = sku_df['Weather Condition'].astype('category')
+    sku_df['Seasonality'] = sku_df['Seasonality'].astype('category')
+
     sku_df = predict_demand(sku_df)
     latest = sku_df.iloc[-1]
 
-    sku_info = sku_master[sku_master['SKU_ID'] == sku_id].iloc[0]
+    sku_info = sku_master[sku_master['Category'] == sku_id].iloc[0]
 
-    combined = latest.to_dict()
-    combined.update(sku_info.to_dict())
+    combined = {k: float(v) if isinstance(v, (int, float)) else v for k, v in latest.to_dict().items()}
+    combined.update({k: float(v) if isinstance(v, (int, float)) else v for k, v in sku_info.to_dict().items()})
 
     status, action = inventory_decision(combined)
 
 
     return {
         "SKU_ID": sku_id,
-        "Predicted_Demand": round(latest['predicted_demand'], 2),
+        "Predicted_Demand": round(latest['predicted_demand'].item(), 2),
         "Inventory_Level": int(latest['Inventory Level']),
         "Status": status,
         "Action": action

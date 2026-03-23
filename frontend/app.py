@@ -1,13 +1,13 @@
 import streamlit as st
 import requests
 
-API_URL = "http://localhost:8000"
+API_URL = "http://127.0.0.1:8000"
 
 st.set_page_config(page_title="Smart Inventory AI", layout="centered")
 
 st.title("🧠 Smart Inventory AI System")
 
-sku_id = st.text_input("Enter Category name (eg. Grocery)")
+sku_id = st.text_input("Enter Category name (eg. Groceries)")
 
 if st.button("Check Inventory Status"):
     response = requests.get(f"{API_URL}/predict/{sku_id}")
